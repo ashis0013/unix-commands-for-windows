@@ -7,15 +7,10 @@ size_t getline(char **lineptr, size_t *n, FILE *stream) {
     size_t size;
     int c;
 
-    if (lineptr == NULL) {
+    if (lineptr == NULL || stream == NULL || n == NULL) {
         return -1;
     }
-    if (stream == NULL) {
-        return -1;
-    }
-    if (n == NULL) {
-        return -1;
-    }
+    
     bufptr = *lineptr;
     size = *n;
 
