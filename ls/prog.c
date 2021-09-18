@@ -74,8 +74,9 @@ void parseArgs(int argc, char** argv) {
     }
     if (strcmp(argv[1], "-a") == 0) {
         printDefault(1);
-    }
-    else {
+    } else if (strcmp(argv[1], "-l") == 0) {
+        system("Get-ChildItem");
+    } else {
         printf("\033[1;31m");
         printf("ls: Provided option does not exist!\n");
         printf("\033[0m");
