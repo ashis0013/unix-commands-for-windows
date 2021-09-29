@@ -65,7 +65,8 @@ void cat(char* filename) {
 
 int main(int argc, char** argv) {
     if (argc <= 1) {
-        printf("Please enter a file name following cat");
+        printf(" /\\_/\\\n( o.o )\n > ^ <\n");
+        printf("Please enter a path after cat");
         return 0;
     }
     cat(argv[1]);
