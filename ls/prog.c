@@ -10,6 +10,8 @@ typedef struct _lsItem {
 
 lsItem* listHead = NULL;
 
+int maxLineItems = 4;
+
 lsItem* getNode(WIN32_FIND_DATA fdFile) {
     lsItem* node = (lsItem* ) malloc(sizeof(lsItem));
     strcpy(node->fileName, fdFile.cFileName);
@@ -33,11 +35,16 @@ void insert(WIN32_FIND_DATA fdFile) {
 
 void printDefault(int showHidden) {
     lsItem* cur = listHead;
+    int lineLen = 0;
     while (cur != NULL) {
         if (cur->isHidden == 0 || (cur->isHidden & showHidden)) {
             if (cur->isFolder) printf("\033[0;36m");
-            printf("%s\t", cur->fileName);
+            printf("%s\t\t", cur->fileName);
             printf("\033[0m");
+            if (++lineLen == maxLineItems) {
+                printf("\n");
+                lineLen = 0;
+            }
         }
         cur = cur->next;
     } printf("\n");
@@ -76,10 +83,15 @@ void parseArgs(int argc, char** argv) {
         printDefault(1);
     } else if (strcmp(argv[1], "-l") == 0) {
         system("Get-ChildItem");
-    } else {
+    } else if (strlen(argv[1]) == 2 && argv[1][0] == '-' && argv[1][1] >= '1' && argv[1][1] <= '3'){
+        maxLineItems = (int) (argv[1][1] - '0');
+        printDefault(0);
+    } else if (argv[1][0] == '-'){
         printf("\033[1;31m");
         printf("ls: Provided option does not exist!\n");
         printf("\033[0m");
+        printDefault(0);
+    } else {
         printDefault(0);
     }
 }
@@ -87,6 +99,20 @@ void parseArgs(int argc, char** argv) {
 int main(int argc, char** argv) {
     char *path = (char*) malloc(2048 * sizeof(char));
     GetCurrentDirectory(2048, path);
-    ListDirectoryContents(path);
+    if (argc == 3) {
+        strcpy(path, argv[2]);
+    } else if ((argc == 2 && argv[1][0] != '-')) {
+        strcpy(path, argv[1]);
+    }
+    if (strlen(path) >= 2 && path[0] == '.' && path[1] == '\\') path += 2;
+    if (path[strlen(path) - 1] == '\\') path[strlen(path) - 1] = '\0';
+    char *rootPath = (char*) malloc(2048 * sizeof(char));
+    GetCurrentDirectory(2048, rootPath);
+    if (strlen(path) != 0) {
+        sprintf(rootPath, "%s\\", rootPath);
+        strncat(rootPath, path, strlen(path));
+    }
+    if (strlen(path) >= 2 && (path[0] == 'C' || path[0] == 'c') && path[1] == ':') strcpy(rootPath, path);
+    ListDirectoryContents(rootPath);
     parseArgs(argc, argv);
 }
