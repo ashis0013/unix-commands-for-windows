@@ -9,3 +9,4 @@ try {
 Copy-Item .\ls\ls.exe -Destination 'C:\Windows\System32\'
 Copy-Item .\pwd\pwd.exe -Destination 'C:\Windows\System32\'
 Copy-Item .\cat\cat.exe -Destination 'C:\Windows\System32\'
+Copy-Item .\time\time.exe -Destination 'C:\Windows\System32\'
