@@ -5,6 +5,19 @@
 
 clock_t start, end;
 
+void print(double time) {
+    printf("\nuser: ");
+    if (time > 3600.0) {
+        printf("%lf hours\n", time/3600.0);
+    } else if (time > 60.0) {
+        printf("%lf minutes\n", time/60.0);
+    } else if (time > 60.0) {
+        printf("%lf seconds\n", time);
+    } else {
+        printf("%lf ms\n", time*1000.0);
+    }
+}
+
 int main(int argc, char** argv) {
     char* cmd = (char* )malloc(2048 * sizeof(char));
     if (argc <= 1) {
@@ -21,5 +34,5 @@ int main(int argc, char** argv) {
     system(cmd);
     end = clock();
     double time_spent = ((double) (end - start)) / CLOCKS_PER_SEC;
-    printf("\nuser: %lf s", time_spent);
+    print(time_spent);
 }
